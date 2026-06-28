@@ -27,7 +27,7 @@ function Contact() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="mailto:sales@enframeconstructions.com"
+              href="mailto:info@enframeconstructions.com"
               className="inline-block w-full sm:w-auto px-10 py-3.5 bg-accent text-paper font-sans text-[11px] tracking-[0.22em] uppercase hover:bg-accentDark transition-colors"
             >
               Email us

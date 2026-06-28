@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
 import EnframeLogo from "./EnframeLogo";
 
 const navLinks = [
@@ -14,14 +13,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -55,115 +47,105 @@ export default function Navbar() {
     };
   }, [open]);
 
-  const isLight = scrolled;
+  const close = () => setOpen(false);
 
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          isLight
-            ? "bg-paper/90 backdrop-blur-xl border-b border-ink/5"
-            : "bg-gradient-to-b from-ink/55 via-ink/35 to-ink/20 backdrop-blur-lg border-b border-white/25 shadow-[0_6px_20px_rgba(0,0,0,0.28)]"
+        className={`fixed inset-x-0 top-0 border-b border-ink/8 bg-paper ${
+          open ? "z-[70]" : "z-50"
         }`}
       >
-        <nav className="max-w-[1400px] mx-auto px-6 sm:px-10 flex items-center justify-between h-16 lg:h-20">
-          <Link
-            href="/"
-            className={`transition-colors duration-300 ${
-              isLight ? "text-ink" : "text-white"
-            }`}
-          >
+        <nav className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 sm:px-10 lg:h-20">
+          <Link href="/" className="text-ink" onClick={close}>
             <EnframeLogo className="h-10 w-auto" />
           </Link>
-          <div className="hidden md:flex items-center gap-10">
+
+          <div className="hidden items-center gap-10 md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`font-sans text-[13px] transition-all duration-500 ease-out ${
-                  isLight
-                    ? "text-black hover:text-ink"
-                    : "font-semibold text-white hover:text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.55)]"
-                }`}
+                className="font-sans text-[13px] text-ink hover:text-accent"
               >
                 {link.label}
               </Link>
             ))}
           </div>
+
           <button
+            type="button"
             onClick={() => setOpen(!open)}
-            className="md:hidden w-9 h-9 flex flex-col justify-center gap-1.5"
-            aria-label="Menu"
+            className="relative flex h-10 w-10 items-center justify-center md:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
           >
-            <span className={`block h-[2px] w-5 rounded-full transition-colors ${isLight ? "bg-ink" : "bg-white"}`} />
-            <span className={`block h-[2px] w-5 rounded-full transition-colors ${isLight ? "bg-ink" : "bg-white"}`} />
-            <span className={`block h-[2px] w-4 rounded-full transition-colors ${isLight ? "bg-ink" : "bg-white"}`} />
+            <span
+              className={`absolute block h-[2px] w-5 rounded-full bg-ink transition-transform duration-300 ${
+                open ? "translate-y-0 rotate-45" : "-translate-y-[5px]"
+              }`}
+            />
+            <span
+              className={`absolute block h-[2px] w-5 rounded-full bg-ink transition-opacity duration-300 ${
+                open ? "opacity-0" : "opacity-100"
+              }`}
+            />
+            <span
+              className={`absolute block h-[2px] w-5 rounded-full bg-ink transition-transform duration-300 ${
+                open ? "translate-y-0 -rotate-45" : "translate-y-[5px]"
+              }`}
+            />
           </button>
         </nav>
       </header>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[60] md:hidden"
-            onClick={() => setOpen(false)}
-          >
-            <div className="absolute inset-0 bg-ink/85 backdrop-blur-xl" />
-            <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-ink/85 to-ink/95" />
+      {open ? (
+        <div className="fixed inset-x-0 top-16 bottom-0 z-[60] md:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-ink/25"
+            aria-label="Close menu"
+            onClick={close}
+          />
 
-            <div
-              className="relative h-full flex flex-col px-6 pt-6 pb-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between">
-                <Link href="/" onClick={() => setOpen(false)} className="text-paper">
-                  <EnframeLogo className="h-9 w-auto" />
-                </Link>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="w-10 h-10 rounded-full border border-paper/30 bg-paper/10 text-paper flex items-center justify-center"
-                  aria-label="Close menu"
+          <div className="relative flex h-full flex-col bg-cream px-6 pb-8 pt-5">
+            <nav className="flex flex-1 flex-col justify-center gap-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={close}
+                  className="flex items-center justify-between rounded-2xl bg-paper px-5 py-4 shadow-[0_4px_16px_rgba(34,25,19,0.06)] active:scale-[0.99] transition-transform"
                 >
-                  ✕
-                </button>
-              </div>
-
-              <div className="mt-10">
-                <span className="inline-flex items-center gap-2 rounded-full border border-paper/25 bg-paper/10 px-4 py-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span className="font-sans text-[10px] tracking-[0.28em] uppercase text-paper/75">
-                    Navigation
+                  <span className="font-sans text-base font-semibold text-ink">
+                    {link.label}
                   </span>
-                </span>
-              </div>
+                  <span className="text-inkMuted">→</span>
+                </Link>
+              ))}
+            </nav>
 
-              <div className="mt-8 flex-1">
-                <div className="space-y-3">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setOpen(false)}
-                      className="group flex items-center justify-between rounded-2xl border border-paper/20 bg-paper/10 px-5 py-4 transition-all duration-500 ease-out hover:bg-paper/15 hover:border-paper/35"
-                    >
-                      <span className="font-display text-2xl text-paper transition-colors duration-500 ease-out">
-                        {link.label}
-                      </span>
-                      <span className="font-sans text-paper/70 group-hover:text-paper transition-all duration-500 ease-out group-hover:translate-x-0.5">
-                        &rarr;
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+            <div className="mt-6 grid grid-cols-2 gap-3 border-t border-ink/8 pt-6">
+              <a
+                href="mailto:info@enframeconstructions.com"
+                onClick={close}
+                className="flex items-center justify-center rounded-xl bg-accent px-4 py-3.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-paper"
+              >
+                Email
+              </a>
+              <a
+                href="https://wa.me/919800000448"
+                target="_blank"
+                rel="noreferrer"
+                onClick={close}
+                className="flex items-center justify-center rounded-xl border border-ink/15 bg-paper px-4 py-3.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-ink"
+              >
+                WhatsApp
+              </a>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

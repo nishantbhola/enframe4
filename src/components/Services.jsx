@@ -5,65 +5,83 @@ import Image from "next/image";
 import Link from "next/link";
 import { HOME_SERVICE_CARDS } from "../lib/enframeImages";
 
+function ServiceCard({ item, index }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-20px" }}
+      transition={{ duration: 0.45, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
+      className="h-full"
+    >
+      <Link href={`/services/${item.id}`} className="group block h-full">
+        <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_4px_20px_rgba(34,25,19,0.07)] transition-shadow duration-300 hover:shadow-[0_8px_28px_rgba(34,25,19,0.12)]">
+          <div className="relative m-3 mb-0 aspect-[4/3] overflow-hidden rounded-xl">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              style={{ objectPosition: item.imagePosition }}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 22vw"
+            />
+          </div>
+
+          <div className="flex flex-1 flex-col p-4 pt-3">
+            <h3 className="font-sans font-semibold text-sm md:text-[15px] text-ink leading-snug line-clamp-2">
+              {item.title}
+            </h3>
+            <p className="mt-2 flex-1 font-sans text-xs text-inkMuted leading-relaxed line-clamp-2">
+              {item.desc}
+            </p>
+
+            <div className="mt-4 flex items-center justify-between border-t border-ink/5 pt-3">
+              <span className="font-sans text-xs font-semibold text-ink">View details</span>
+              <span className="text-ink transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
+            </div>
+          </div>
+        </article>
+      </Link>
+    </motion.div>
+  );
+}
+
 function Services() {
   return (
-    <section id="services" className="pt-20 md:pt-28 pb-10 md:pb-12 bg-cream text-ink">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16"
-      >
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-14">
+    <section id="services" className="bg-cream py-12 md:py-16">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 flex items-end justify-between gap-4"
+        >
           <div>
-            <span className="font-sans text-accent text-[11px] uppercase tracking-[0.3em]">
-              Opulent Construction Enhancements
-            </span>
-            <h2 className="font-display text-2xl md:text-3xl lg:text-[2rem] font-normal mt-4 tracking-[0.06em]">
-              From Planning to Sumptuous Handover
+            <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-accent">
+              Services
+            </p>
+            <h2 className="mt-2 font-sans font-semibold text-xl md:text-2xl text-ink tracking-tight">
+              From planning to handover
             </h2>
           </div>
-          <p className="font-serif text-black max-w-md text-base md:text-lg">
-            A structured build approach designed for quality, safety, and opulent output—on time and within budget.
-          </p>
-        </div>
+          <Link
+            href="/services"
+            className="group inline-flex shrink-0 items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted transition-colors hover:text-accent"
+          >
+            All
+            <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+          </Link>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {HOME_SERVICE_CARDS.map((item, i) => (
-            <Link key={item.id} href={`/services/${item.id}`} className="block h-full">
-              <motion.article
-                whileHover={{ y: -6 }}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group bg-paper rounded-2xl overflow-hidden border border-ink/10 h-full shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ objectPosition: item.imagePosition }}
-                    sizes="(max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" />
-                  <span className="absolute top-4 left-4 w-9 h-9 rounded-full bg-accent text-white flex items-center justify-center text-xs font-semibold">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <div className="p-5 md:p-6">
-                  <h3 className="font-display text-lg leading-tight">{item.title}</h3>
-                  <p className="font-serif text-black/85 text-sm mt-2 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-              </motion.article>
-            </Link>
+            <ServiceCard key={item.id} item={item} index={i} />
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

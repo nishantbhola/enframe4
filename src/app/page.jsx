@@ -1,9 +1,8 @@
 "use client";
 import Header from "../components/Header";
 import HighlightGallery from "../components/HighlightGallery";
-import Overview from "../components/Overview";
+import SectionBridge from "../components/SectionBridge";
 import Services from "../components/Services";
-import Projects from "../components/Projects";
 import Testimonials from "../components/Testimonials";
 import Contact from "../components/Contact";
 
@@ -12,9 +11,8 @@ export default function HomePage() {
     <>
       <Header />
       <HighlightGallery />
-      <Overview />
+      <SectionBridge />
       <Services />
-      <Projects />
       <Testimonials />
       <Contact />
     </>

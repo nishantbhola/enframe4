@@ -43,7 +43,7 @@ function SocialIcon({ label }) {
 
 function FooterLabel({ children }) {
   return (
-    <p className="font-sans text-[10px] tracking-[0.28em] uppercase text-paper/45 mb-3">
+    <p className="font-sans text-[11px] md:text-[10px] tracking-[0.28em] uppercase text-paper/45 mb-4 md:mb-3">
       {children}
     </p>
   );
@@ -52,27 +52,27 @@ function FooterLabel({ children }) {
 export default function Footer() {
   return (
     <footer className="bg-ink text-paper">
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-8 md:py-10">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-paper/12 to-transparent mb-8" />
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-10 md:py-10">
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-paper/12 to-transparent mb-10 md:mb-8" />
 
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-x-8 gap-y-8 items-start">
-          <div className="col-span-2 md:col-span-5">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-10 md:gap-y-8 items-start text-center md:text-left">
+          <div className="md:col-span-5 flex flex-col items-center md:items-start">
             <Link href="/" className="inline-block text-paper/90 hover:text-paper transition-colors">
-              <EnframeLogo className="h-14 sm:h-16 md:h-[4.5rem] w-auto" />
+              <EnframeLogo className="h-[4.25rem] sm:h-16 md:h-[4.5rem] w-auto" />
             </Link>
-            <p className="mt-3 font-sans text-sm sm:text-base font-medium tracking-[0.06em] text-paper/85">
+            <p className="mt-4 font-sans text-base sm:text-base font-medium tracking-[0.06em] text-paper/85">
               Enframe Constructions
             </p>
             <p className="mt-2 font-serif text-sm text-paper/50 leading-relaxed max-w-xs hidden sm:block">
               Ultra-opulent residences, pan India.
             </p>
-            <div className="flex items-center gap-2.5 mt-4">
+            <div className="flex items-center justify-center md:justify-start gap-3 mt-5 md:mt-4">
               {socials.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-paper/15 text-paper/55 hover:text-paper hover:border-paper/30 transition-colors"
+                  className="inline-flex h-10 w-10 md:h-8 md:w-8 items-center justify-center rounded-full border border-paper/15 text-paper/55 hover:text-paper hover:border-paper/30 transition-colors"
                 >
                   <SocialIcon label={s.label} />
                 </a>
@@ -80,14 +80,14 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="md:col-span-3">
+          <div className="md:col-span-3 flex flex-col items-center md:items-start">
             <FooterLabel>Explore</FooterLabel>
-            <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-2">
+            <ul className="flex flex-col items-center gap-2.5 md:grid md:grid-cols-1 md:items-start md:gap-y-2">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="font-sans text-[13px] text-paper/70 hover:text-paper transition-colors"
+                    className="font-sans text-[15px] md:text-[13px] text-paper/70 hover:text-paper transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -96,21 +96,21 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-4">
+          <div className="md:col-span-4 flex flex-col items-center md:items-start">
             <FooterLabel>Studio</FooterLabel>
-            <address className="not-italic space-y-1.5 text-[13px] text-paper/70 leading-relaxed">
+            <address className="not-italic space-y-2 text-[15px] md:text-[13px] text-paper/70 leading-relaxed">
               <p>B-103 South City 1, Gurugram</p>
               <a href="https://wa.me/919800000448" target="_blank" rel="noreferrer" className="block hover:text-accent transition-colors">
                 +91 9800000448
               </a>
-              <a href="mailto:sales@enframeconstructions.com" className="block hover:text-accent transition-colors break-all">
-                sales@enframeconstructions.com
+              <a href="mailto:info@enframeconstructions.com" className="block hover:text-accent transition-colors break-all">
+                info@enframeconstructions.com
               </a>
             </address>
           </div>
         </div>
 
-        <div className="mt-8 pt-5 border-t border-paper/10 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between text-[10px] tracking-[0.14em] uppercase text-paper/35">
+        <div className="mt-10 md:mt-8 pt-6 md:pt-5 border-t border-paper/10 flex flex-col items-center sm:flex-row gap-2 sm:items-center sm:justify-between text-xs md:text-[10px] tracking-[0.14em] uppercase text-paper/35 text-center sm:text-left">
           <p>&copy; {new Date().getFullYear()} Enframe Constructions</p>
           <p className="hidden sm:block">Opulent homes, quietly perfected.</p>
         </div>

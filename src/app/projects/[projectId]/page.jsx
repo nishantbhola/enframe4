@@ -1,38 +1,104 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { PROJECTS_BY_ID } from "../projectsData";
+import { PROJECTS, PROJECTS_BY_ID } from "../projectsData";
 
 function Bullet({ text }) {
   return (
-    <li className="flex items-start gap-2 font-serif text-black/85 text-sm">
-      <span className="mt-2 w-1.5 h-1.5 rounded-full bg-accent" />
+    <li className="flex items-start gap-2.5 font-sans text-sm text-ink/80 leading-relaxed">
+      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
       <span>{text}</span>
     </li>
   );
 }
 
+function CheckList({ title, items }) {
+  return (
+    <div>
+      <h3 className="font-sans text-sm font-semibold text-ink">{title}</h3>
+      <ul className="mt-3 space-y-2.5">
+        {items.map((line) => (
+          <li
+            key={line}
+            className="flex items-start gap-2.5 font-sans text-sm text-ink/75 leading-relaxed"
+          >
+            <span
+              className="mt-2 h-1 w-1 shrink-0 rounded-full border border-accent"
+              aria-hidden
+            />
+            <span>{line}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ProjectGalleryThumb({ src, alt, idx, onClick, isActive }) {
+  return (
+    <motion.button
+      type="button"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={{ duration: 0.55, delay: (idx % 8) * 0.03 }}
+      whileHover={{ y: -2 }}
+      onClick={onClick}
+      className={`relative overflow-hidden rounded-xl border text-left transition-colors ${
+        isActive
+          ? "border-accent ring-1 ring-accent/30"
+          : "border-ink/10 hover:border-ink/25"
+      }`}
+    >
+      <motion.div
+        initial={{
+          clipPath: "inset(12% 10% 12% 10% round 1rem)",
+          scale: 1.08,
+          filter: "blur(10px)",
+        }}
+        whileInView={{
+          clipPath: "inset(0% 0% 0% 0% round 0rem)",
+          scale: 1,
+          filter: "blur(0px)",
+        }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{
+          duration: 0.75,
+          delay: (idx % 8) * 0.03,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="relative aspect-video overflow-hidden"
+      >
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          unoptimized
+          className="object-cover"
+          sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 200px"
+        />
+      </motion.div>
+    </motion.button>
+  );
+}
+
 export default function ProjectDetailPage({ params }) {
   const project = PROJECTS_BY_ID[params.projectId];
-
-  if (!project) {
-    return (
-      <div className="py-24 px-6">
-        <h1 className="font-display text-3xl text-ink">Project not found</h1>
-        <Link href="/projects" className="text-accent underline mt-4 inline-block">
-          Back to projects
-        </Link>
-      </div>
-    );
-  }
+  const projectIndex = PROJECTS.findIndex((p) => p.id === params.projectId);
+  const prevProject = projectIndex > 0 ? PROJECTS[projectIndex - 1] : null;
+  const nextProject =
+    projectIndex >= 0 && projectIndex < PROJECTS.length - 1
+      ? PROJECTS[projectIndex + 1]
+      : null;
 
   const gallery = useMemo(
-    () => project.gallery ?? [project.image],
-    [project.gallery, project.image]
+    () => project?.images ?? project?.gallery ?? (project ? [project.image] : []),
+    [project]
   );
+
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -58,398 +124,311 @@ export default function ProjectDetailPage({ params }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [lightboxOpen, gallery.length]);
 
+  if (!project) {
+    return (
+      <div className="bg-cream px-6 py-24">
+        <h1 className="font-sans text-2xl font-semibold text-ink">Project not found</h1>
+        <Link href="/projects" className="mt-4 inline-block font-sans text-sm text-accent">
+          Back to projects
+        </Link>
+      </div>
+    );
+  }
+
+  const openLightbox = (index) => {
+    setActiveIndex(index);
+    setLightboxOpen(true);
+  };
+
   return (
-    <div>
-      {/* HERO */}
-      <section className="relative min-h-[75vh] overflow-hidden bg-paper">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={project.image}
-            alt={`${project.title} hero`}
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-        </div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-r from-ink/75 via-ink/45 to-ink/15" />
-        <div className="absolute inset-0 z-0 bg-gradient-to-t from-ink/25 via-transparent to-transparent" />
-
-        <div className="relative z-10 min-h-[75vh] flex items-end">
-          <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pb-14 pt-28 md:pb-20">
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.65 }}
+    <div className="bg-cream min-h-screen">
+      <header className="border-b border-ink/8 bg-paper pt-24 md:pt-28">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-5 md:py-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 gap-y-2">
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-1.5 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-inkMuted transition-colors hover:text-accent"
             >
-              <div className="inline-flex items-center gap-3 rounded-full border border-paper/35 bg-paper/15 px-4 py-2 backdrop-blur-md">
-                <span className="w-2 h-2 rounded-full bg-accent" />
-                <span className="font-sans text-[11px] tracking-[0.3em] uppercase text-paper">
-                  {project.eyebrow}
-                </span>
-              </div>
-
-              <h1 className="font-display text-4xl md:text-5xl lg:text-[4rem] leading-[0.92] tracking-[0.03em] text-paper mt-6">
-                {project.title}
-              </h1>
-              <p className="font-serif text-paper/85 text-base md:text-lg mt-5 max-w-xl leading-relaxed">
-                {project.tag} &mdash; {project.location}
-              </p>
-            </motion.div>
+              <span aria-hidden="true">←</span>
+              All projects
+            </Link>
+            <span className="font-sans text-[10px] uppercase tracking-[0.28em] text-accent">
+              {project.tag}
+            </span>
           </div>
-        </div>
-      </section>
 
-      {/* RENDER + GALLERY */}
-      <section className="py-24 bg-paper">
-        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-10"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+            className="mt-4 md:mt-5"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-paper/35 bg-paper/15 px-4 py-2 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-accent" />
-              <span className="font-sans text-[11px] tracking-[0.3em] uppercase text-ink">
-                Project render + gallery
-              </span>
-            </div>
-            <h2 className="font-display text-2xl md:text-3xl lg:text-[2rem] font-normal mt-5 tracking-[0.06em] text-ink">
-              {project.title}
-            </h2>
-            <p className="font-serif text-black/80 mt-4 max-w-3xl leading-relaxed">
-              An opulent render gallery with an immersive lightbox viewer.
+            <h1 className="font-sans text-xl md:text-2xl font-semibold text-ink tracking-tight leading-snug">
+              {project.location}
+            </h1>
+            <p className="mt-2 font-sans text-sm text-inkMuted leading-relaxed">
+              {project.tag}
             </p>
           </motion.div>
-
-          <div className="grid lg:grid-cols-12 gap-6 items-start">
-            {/* Main media */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="lg:col-span-7"
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveIndex(0);
-                  setLightboxOpen(true);
-                }}
-                className="w-full text-left"
-              >
-                <div className="relative overflow-hidden rounded-3xl border border-ink/10 bg-cream/40">
-                  <div className="aspect-[16/10] relative">
-                    <Image
-                      src={gallery[0]}
-                      alt={`${project.title} render`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 60vw"
-                      priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/15 to-transparent" />
-                    <div className="absolute left-6 bottom-6 right-6">
-                      <div className="inline-flex items-center gap-3 rounded-full border border-paper/25 bg-paper/10 backdrop-blur-md px-4 py-2">
-                        <span className="w-2 h-2 rounded-full bg-accent" />
-                        <span className="font-sans text-[11px] tracking-[0.3em] uppercase text-paper">
-                          View gallery
-                        </span>
-                      </div>
-                      <p className="mt-4 font-display text-2xl text-paper leading-tight">
-                        {project.tag}
-                      </p>
-                      <p className="mt-2 font-serif text-paper/85 text-sm">
-                        Location: {project.location}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </button>
-            </motion.div>
-
-            {/* Thumbnails */}
-            <div className="lg:col-span-5">
-              <div className="grid grid-cols-2 gap-4">
-                {gallery.slice(0, 4).map((src, i) => (
-                  <motion.button
-                    key={src + i}
-                    type="button"
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: i * 0.03 }}
-                    onClick={() => {
-                      setActiveIndex(i);
-                      setLightboxOpen(true);
-                    }}
-                    className={`relative overflow-hidden rounded-2xl border text-left transition-all duration-300 ${
-                      activeIndex === i
-                        ? "border-accent/40 ring-1 ring-accent/30 shadow-md"
-                        : "border-ink/10 bg-cream/30"
-                    }`}
-                  >
-                    <div className="aspect-[4/3] relative">
-                      <Image
-                        src={src}
-                        alt={`${project.title} thumbnail ${i + 1}`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 50vw, 25vw"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-ink/10 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* Extra thumbnail row */}
-              {gallery.length > 4 ? (
-                <div className="mt-4 grid grid-cols-1 gap-4">
-                  {gallery.slice(4).map((src, j) => (
-                    <button
-                      key={src + j}
-                      type="button"
-                      onClick={() => {
-                        setActiveIndex(j + 4);
-                        setLightboxOpen(true);
-                      }}
-                      className="relative overflow-hidden rounded-2xl border border-ink/10 bg-cream/30 text-left"
-                    >
-                      <div className="aspect-[16/9] relative">
-                        <Image
-                          src={src}
-                          alt={`${project.title} thumbnail ${j + 5}`}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-ink/10 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </div>
         </div>
-      </section>
+      </header>
 
-      {/* LIGHTBOX */}
-      <AnimatePresence>
-        {lightboxOpen ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-ink/70 backdrop-blur-md"
-            onClick={() => setLightboxOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.98, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.98, opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center p-6"
+      <section className="py-8 md:py-10">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+          <article className="overflow-hidden rounded-3xl border border-ink/8 bg-paper shadow-[0_12px_40px_-16px_rgba(34,25,19,0.1)]">
+            <button
+              type="button"
+              onClick={() => openLightbox(0)}
+              className="relative block aspect-video w-full overflow-hidden text-left"
             >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-5xl h-[70vh] rounded-3xl overflow-hidden border border-ink/10 bg-paper"
+              <motion.div
+                initial={{
+                  clipPath: "inset(10% 8% 10% 8% round 1.2rem)",
+                  scale: 1.06,
+                  filter: "blur(10px)",
+                }}
+                animate={{
+                  clipPath: "inset(0% 0% 0% 0% round 0rem)",
+                  scale: 1,
+                  filter: "blur(0px)",
+                }}
+                transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+                className="relative h-full w-full"
               >
                 <Image
-                  src={gallery[activeIndex]}
-                  alt={`${project.title} image ${activeIndex + 1}`}
+                  src={gallery[0]}
+                  alt={project.location}
                   fill
+                  unoptimized
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 80vw"
+                  style={{ objectPosition: project.imagePosition }}
+                  sizes="(max-width: 1400px) 100vw, 1400px"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-transparent" />
+              </motion.div>
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/30 via-transparent to-transparent opacity-0 transition-opacity hover:opacity-100" />
+              <span className="absolute bottom-4 right-4 rounded-full bg-paper/90 px-3.5 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
+                View gallery
+              </span>
+            </button>
 
-                {/* close */}
-                <button
-                  type="button"
-                  onClick={() => setLightboxOpen(false)}
-                  className="absolute top-4 right-4 z-10 rounded-full bg-paper/20 backdrop-blur-md border border-paper/30 text-paper px-4 py-2 font-sans text-xs tracking-[0.18em] uppercase"
-                >
-                  Close
-                </button>
-
-                {/* prev/next */}
-                <button
-                  type="button"
-                  onClick={() =>
-                    setActiveIndex(
-                      (i) => (i - 1 + gallery.length) % gallery.length
-                    )
-                  }
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-paper/20 backdrop-blur-md border border-paper/30 text-paper flex items-center justify-center"
-                  aria-label="Previous image"
-                >
-                  ←
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveIndex((i) => (i + 1) % gallery.length)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-paper/20 backdrop-blur-md border border-paper/30 text-paper flex items-center justify-center"
-                  aria-label="Next image"
-                >
-                  →
-                </button>
-
-                {/* caption */}
-                <div className="absolute left-6 bottom-6 right-6 z-10">
-                  <div className="inline-flex items-center gap-3 rounded-full border border-paper/25 bg-paper/10 backdrop-blur-md px-4 py-2">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
-                    <span className="font-sans text-[11px] tracking-[0.3em] uppercase text-paper">
-                      Image {activeIndex + 1} / {gallery.length}
-                    </span>
-                  </div>
-                  <p className="mt-4 font-display text-2xl text-paper leading-tight">
-                    {project.title}
-                  </p>
-                  <p className="mt-2 font-serif text-paper/85 text-sm">
-                    {project.location}
-                  </p>
-                </div>
+            {gallery.length > 1 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 border-t border-ink/8 bg-cream/40 p-3 md:p-4">
+                {gallery.map((src, i) => (
+                  <ProjectGalleryThumb
+                    key={src + i}
+                    src={src}
+                    alt={`${project.location} ${i + 1}`}
+                    idx={i}
+                    onClick={() => openLightbox(i)}
+                    isActive={activeIndex === i && lightboxOpen}
+                  />
+                ))}
               </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+            )}
 
-      {/* CONTENT */}
-      <section className=" bg-paper">
-        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="rounded-3xl border border-ink/10 bg-paper/45 backdrop-blur-sm p-8 lg:p-10"
-          >
-            <div className="grid lg:grid-cols-12 gap-10">
-              <div className="lg:col-span-8">
-                <p className="font-sans text-[11px] tracking-[0.28em] uppercase text-accent">
-                  Project narrative
-                </p>
-                <h2 className="mt-4 font-display text-3xl md:text-4xl text-ink leading-[0.98]">
-                  Designed as an opulent showcase, built for long-term performance
-                </h2>
-                <p className="mt-6 font-serif text-black/85 leading-relaxed text-base md:text-lg">
-                  {project.overview}
-                </p>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.1 }}
+              className="p-6 md:p-8 lg:p-10"
+            >
+              <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
+                <div>
+                  <h2 className="font-sans text-sm font-semibold text-ink">About this project</h2>
+                  <p className="mt-2.5 font-sans text-[15px] text-ink/80 leading-relaxed">
+                    {project.overview}
+                  </p>
 
-                <div className="mt-8">
-                  <h3 className="font-display text-xl text-ink">Execution approach</h3>
-                  <p className="mt-3 font-serif text-black/80 leading-relaxed">
+                  <div className="my-6 h-px bg-ink/8" />
+
+                  <h2 className="font-sans text-sm font-semibold text-ink">How we built it</h2>
+                  <p className="mt-2.5 font-sans text-[15px] text-ink/80 leading-relaxed">
                     {project.approachParagraph}
                   </p>
-                </div>
-              </div>
 
-              <div className="lg:col-span-4">
-                <div className="rounded-2xl border border-ink/10 bg-paper/45 p-6">
-                  <p className="font-sans text-[11px] tracking-[0.22em] uppercase text-inkMuted">
-                    Project facts
-                  </p>
-                  <div className="mt-4 space-y-3">
-                    <div>
-                      <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
-                        Reference
-                      </p>
-                      <p className="font-serif text-black">{project.eyebrow}</p>
-                    </div>
-                    <div>
-                      <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
-                        Location
-                      </p>
-                      <p className="font-serif text-black">{project.location}</p>
-                    </div>
-                    <div>
-                      <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
-                        Category
-                      </p>
-                      <p className="font-serif text-black">{project.tag}</p>
-                    </div>
+                  <div className="my-6 h-px bg-ink/8" />
+
+                  <h2 className="font-sans text-sm font-semibold text-ink">Scope delivered</h2>
+                  <ul className="mt-3 space-y-2.5">
+                    {project.included.map((item) => (
+                      <Bullet key={item} text={item} />
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                  <div className="rounded-2xl border border-ink/8 bg-cream px-5 py-5">
+                    <CheckList title="Key outcomes" items={project.outcomes} />
+                  </div>
+                  <div className="rounded-2xl border border-ink/8 bg-cream px-5 py-5">
+                    <CheckList title="Quality checks" items={project.qualityChecks} />
+                  </div>
+                  <div className="rounded-2xl border border-ink/8 bg-cream px-5 py-5 sm:col-span-2 lg:col-span-1">
+                    <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
+                      Project details
+                    </p>
+                    <dl className="mt-3 space-y-3">
+                      <div>
+                        <dt className="font-sans text-xs text-inkMuted">Location</dt>
+                        <dd className="mt-0.5 font-sans text-sm font-semibold text-ink">
+                          {project.location}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="font-sans text-xs text-inkMuted">Category</dt>
+                        <dd className="mt-0.5 font-sans text-sm font-semibold text-ink">
+                          {project.tag}
+                        </dd>
+                      </div>
+                    </dl>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="mt-10 grid lg:grid-cols-12 gap-8">
-              <div className="lg:col-span-6">
-                <h3 className="font-display text-xl text-ink">Scope delivered</h3>
-                <ul className="mt-4 space-y-2">
-                  {project.included.map((item) => (
-                    <Bullet key={item} text={item} />
-                  ))}
-                </ul>
-              </div>
-
-              <div className="lg:col-span-6">
-                <h3 className="font-display text-xl text-ink">Key outcomes</h3>
-                <ul className="mt-4 space-y-2">
-                  {project.outcomes.map((item) => (
-                    <Bullet key={item} text={item} />
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </motion.div>
-
-          <div className="mt-8 grid lg:grid-cols-12 gap-8 items-start">
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.03 }}
-              className="lg:col-span-8 rounded-3xl border border-ink/10 bg-paper/45 backdrop-blur-sm p-7"
-            >
-              <h3 className="font-display text-2xl text-ink">Quality checkpoints</h3>
-              <p className="mt-3 font-serif text-black/75 leading-relaxed">
-                Every stage is reviewed for finish, systems, and handover readiness.
-              </p>
-              <ul className="mt-5 space-y-2">
-                {project.qualityChecks.map((q) => (
-                  <Bullet key={q} text={q} />
-                ))}
-              </ul>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.06 }}
-              className="lg:col-span-4 rounded-3xl border border-ink/10 bg-paper/45 backdrop-blur-sm p-7"
-            >
-              <h3 className="font-display text-xl text-ink">Next step</h3>
-              <p className="mt-3 font-serif text-black/75 leading-relaxed">
-                Explore our delivery philosophy or continue to other showcased projects.
-              </p>
-              <div className="mt-6">
-                <Link
-                  href="/about"
-                  className="inline-flex items-center justify-center gap-2 w-full px-8 py-3.5 bg-accent text-paper font-sans text-xs tracking-[0.18em] uppercase hover:bg-accentDark transition-colors rounded-2xl"
-                >
-                  Learn our process
-                </Link>
-                <Link
-                  href="/projects"
-                  className="inline-flex items-center justify-center gap-2 w-full px-8 py-3.5 border border-stone/60 text-ink font-sans text-xs tracking-[0.18em] uppercase hover:bg-paper transition-colors rounded-2xl mt-3"
-                >
-                  Back to projects
-                </Link>
+            {(prevProject || nextProject) && (
+              <div className="grid sm:grid-cols-2 border-t border-ink/8 bg-cream/40">
+                {prevProject ? (
+                  <Link
+                    href={`/projects/${prevProject.id}`}
+                    className="group border-b border-ink/8 px-5 py-4 transition-colors hover:bg-cream/80 sm:border-b-0 sm:border-r"
+                  >
+                    <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
+                      ← Previous
+                    </p>
+                    <p className="mt-1 font-sans text-sm font-semibold text-ink group-hover:text-accent transition-colors">
+                      {prevProject.location}
+                    </p>
+                  </Link>
+                ) : (
+                  <div className="hidden sm:block sm:border-r border-ink/8" />
+                )}
+                {nextProject ? (
+                  <Link
+                    href={`/projects/${nextProject.id}`}
+                    className="group px-5 py-4 text-left transition-colors hover:bg-cream/80 sm:text-right"
+                  >
+                    <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
+                      Next →
+                    </p>
+                    <p className="mt-1 font-sans text-sm font-semibold text-ink group-hover:text-accent transition-colors">
+                      {nextProject.location}
+                    </p>
+                  </Link>
+                ) : null}
               </div>
-            </motion.div>
+            )}
+          </article>
+        </div>
+      </section>
+
+      <section className="border-t border-ink/8 bg-paper pb-12 md:pb-14">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-10 md:pt-12">
+          <div className="flex flex-col items-center text-center">
+            <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-accent">
+              Get in touch
+            </p>
+            <p className="mt-3 font-sans text-base font-semibold text-ink">
+              Interested in a build like this?
+            </p>
+            <p className="mt-2 font-sans text-sm text-inkMuted max-w-sm leading-relaxed">
+              Tell us about your site and we&apos;ll discuss scope, timeline, and next steps.
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
+              <a
+                href="mailto:info@enframeconstructions.com"
+                className="inline-flex items-center justify-center px-6 py-3 bg-accent text-paper font-sans text-[10px] font-semibold uppercase tracking-[0.16em] hover:bg-accentDark transition-colors"
+              >
+                Email us
+              </a>
+              <a
+                href="https://wa.me/919800000448"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center px-6 py-3 border border-ink/15 bg-cream text-ink font-sans text-[10px] font-semibold uppercase tracking-[0.16em] hover:border-ink/30 transition-colors"
+              >
+                WhatsApp
+              </a>
+              <Link
+                href="/projects"
+                className="inline-flex items-center justify-center px-6 py-3 font-sans text-[10px] font-semibold uppercase tracking-[0.16em] text-inkMuted transition-colors hover:text-accent"
+              >
+                All projects →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
+
+      <div
+        role="dialog"
+        aria-modal={lightboxOpen}
+        aria-hidden={!lightboxOpen}
+        className={`fixed inset-0 z-[100] bg-ink/80 backdrop-blur-sm transition-opacity duration-200 ${
+          lightboxOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setLightboxOpen(false)}
+      >
+        <div className="absolute inset-0 flex items-center justify-center p-4 md:p-6">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden border border-ink/10 bg-ink"
+          >
+            {gallery.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt={`${project.location} ${i + 1}`}
+                decoding="async"
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-150 ${
+                  lightboxOpen && i === activeIndex
+                    ? "opacity-100 z-10"
+                    : "opacity-0 z-0"
+                }`}
+              />
+            ))}
+
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(false)}
+              className="absolute top-3 right-3 z-20 rounded-full bg-ink/50 px-3 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-paper backdrop-blur-sm"
+            >
+              Close
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setActiveIndex((i) => (i - 1 + gallery.length) % gallery.length)
+              }
+              className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/50 text-paper backdrop-blur-sm"
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveIndex((i) => (i + 1) % gallery.length)}
+              className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/50 text-paper backdrop-blur-sm"
+              aria-label="Next image"
+            >
+              →
+            </button>
+
+            <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between gap-3">
+              <p className="font-sans text-sm font-semibold text-paper truncate">
+                {project.location}
+              </p>
+              <p className="shrink-0 font-sans text-[10px] uppercase tracking-[0.14em] text-paper/80">
+                {activeIndex + 1} / {gallery.length}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-

@@ -73,7 +73,11 @@ export default function GalleryPage() {
 
   const galleryItems = useMemo(() => {
     const listedProjectItems = PROJECTS.flatMap((project) => {
-      const images = project.gallery?.length ? project.gallery : [project.image];
+      const images = project.images?.length
+        ? project.images
+        : project.gallery?.length
+          ? project.gallery
+          : [project.image];
       return images.map((src) => ({ src, label: project.title }));
     });
 

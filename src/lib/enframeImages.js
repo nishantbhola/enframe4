@@ -16,6 +16,7 @@ const GALLERY_V4_ALIASES = {
   "090a9421_a.jpg": "090a9421-a.webp",
   "090a9427_a.jpg": "090a9427-a.webp",
   "090a9395aa_vv.jpg": "090a9395aa-vv.webp",
+  "090a9300.jpg": "090a9300.webp",
   "090a9495_a.jpg": "090a9495-a.webp",
   "1b6acd31.jpg": "1b6acd31-b877-40a3-ae46-4caba6c2f912_1_102_a.webp",
   "e0902465.jpg": "e0902465-813b-425b-b545-e05b59d79515_1_102_o.webp",
@@ -61,9 +62,23 @@ export function cdnHero(file) {
   return HERO_V4[file] ?? `${CDN_ENFRAME_V2}/01-heroes/${file}`;
 }
 
-/** @param {string} siteId e.g. "k-block-south-city-1" */
+/** Direct enframev4 project folder IDs (match S3 / CloudFront paths). */
+const V4_PROJECT_IDS = new Set([
+  "south-ex-1-delhi",
+  "south-city-103",
+  "south-city-117",
+  "dlf-1",
+  "dlf-3",
+]);
+
+/** @param {string} siteId project folder id or legacy site id */
 export function cdnProject(siteId, file) {
   const v4File = toV4GalleryFile(file);
+
+  if (V4_PROJECT_IDS.has(siteId)) {
+    return `${CDN_ENFRAME_V4}/projects/${siteId}/${v4File}`;
+  }
+
   const v4Site = PROJECT_V4_SITES[siteId];
 
   if (v4Site) {
@@ -255,7 +270,7 @@ export const HOME_SERVICE_CARDS = [
   },
   {
     id: "amenities-landscaping",
-    title: "Amenities & Landscaping",
+    title: "Amenities, Landscaping & Handover",
     desc: "Standard vs Opulent landscaping, driveways, boundary walls, pools, rooftop gardens, and water features.",
     image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
     imagePosition: "50% 54%",
@@ -285,32 +300,6 @@ export const IMAGE_DIRECTION = {
     { src: cdnGallery("090a9427_a.jpg"), position: "50% 48%" },
     { src: cdnGallery("090a9344.jpg"), position: "50% 56%" },
   ],
-  servicesGrid: SERVICE_CARD_MEDIA,
-  projectsHome: [
-    { src: cdnGallery("090a9544.jpg"), position: "50% 54%" },
-    { src: cdnGallery("1b6acd31.jpg"), position: "50% 54%" },
-    { src: cdnGallery("090a9289.jpg"), position: "50% 50%" },
-    {
-      src: cdnGallery("c7a3dee0-0f2f-4c6e-a2bf-9d9fcf017ce1_1_102_o.jpeg"),
-      position: "50% 52%",
-    },
-  ],
-  homeGallery: [
-    { src: cdnGallery("090a9544.jpg"), position: "50% 56%" },
-    { src: cdnGallery("090a9362.jpg"), position: "50% 54%" },
-    { src: cdnGallery("090a9445.jpg"), position: "50% 58%" },
-    { src: cdnGallery("090a9468.jpg"), position: "50% 52%" },
-    { src: cdnGallery("090a9512.jpg"), position: "50% 50%" },
-    { src: cdnGallery("090a9500.jpg"), position: "52% 48%" },
-    { src: cdnGallery("090a9427_a.jpg"), position: "50% 48%" },
-    { src: cdnGallery("090a9576.jpg"), position: "50% 52%" },
-  ],
-  delivery: [
-    { src: cdnGallery("090a9576.jpg"), position: "50% 52%" },
-    { src: cdnGallery("090a9336.jpg"), position: "50% 55%" },
-    { src: cdnGallery("090a9569.jpg"), position: "50% 52%" },
-    { src: cdnGallery("090a9512.jpg"), position: "50% 50%" },
-  ],
   testimonial: { src: cdnGallery("090a9556.jpg"), position: "50% 54%" },
   aboutCategories: [
     { src: cdnGallery("090a9289.jpg"), position: "50% 52%" },
@@ -320,5 +309,4 @@ export const IMAGE_DIRECTION = {
     { src: cdnGallery("090a9650.jpg"), position: "50% 50%" },
     { src: cdnGallery("090a9512.jpg"), position: "50% 50%" },
   ],
-  aboutPastProjects: { src: cdnGallery("090a9634.jpg"), position: "50% 50%" },
 };

@@ -2,7 +2,6 @@ export const SERVICES = [
   {
     id: "pre-construction-planning",
     title: "Pre-Construction Planning",
-    eyebrow: "01",
     shortDesc: "Site evaluation, design development, and permits that unlock a smooth build.",
     approachParagraph:
       "We start with a structured assessment of land, soil, and site constraints. That information is then translated into floor plans and elevations through design collaboration. Finally, we handle the permissions and approvals process so your execution can begin with clarity and control.",
@@ -27,7 +26,6 @@ export const SERVICES = [
   {
     id: "ground-breaking-site-preparation",
     title: "Ground Breaking & Site Preparation",
-    eyebrow: "02",
     shortDesc: "Clearing, excavation, and utility setup to prepare the project on-site.",
     approachParagraph:
       "We prepare the site in a controlled sequence: clearing and excavation for foundation readiness, then utilities setup so construction can proceed without avoidable delays.",
@@ -51,7 +49,6 @@ export const SERVICES = [
   {
     id: "foundation-structural-work",
     title: "Foundation & Structural Work",
-    eyebrow: "03",
     shortDesc: "Structural integrity through foundation laying, framing, and rainwater harvesting.",
     approachParagraph:
       "We execute the structural core with precision—pouring concrete or installing pilings, erecting the skeleton, then integrating rainwater harvesting to support long-term infrastructure needs.",
@@ -76,7 +73,6 @@ export const SERVICES = [
   {
     id: "enclosure-roofing-waterproofing",
     title: "Enclosure, Roofing & Waterproofing",
-    eyebrow: "04",
     shortDesc: "Weatherproof enclosure and a foundational waterproofing investment.",
     approachParagraph:
       "We build the protective envelope: walls, roof systems, and precisely fitted openings. Waterproofing is treated as a foundational investment—because it protects quality, safety, and prestige over the long term.",
@@ -101,7 +97,6 @@ export const SERVICES = [
   {
     id: "wood-work",
     title: "Wood Work",
-    eyebrow: "05",
     shortDesc: "Custom cabinetry and refined interior wood enhancements.",
     approachParagraph:
       "Woodwork enhancement focuses on precision craft: measured and built cabinetry, wardrobes, decorative panels, and ceiling treatments—so the interior finish feels cohesive and upscale.",
@@ -124,7 +119,6 @@ export const SERVICES = [
   {
     id: "mechanical-electrical-plumbing",
     title: "Mechanical, Electrical & Plumbing (MEP)",
-    eyebrow: "06",
     shortDesc: "MEP installation with fire safety and soundproofing technologies.",
     approachParagraph:
       "We lay out and install MEP systems—wiring, plumbing, HVAC, and fire safety—then incorporate soundproofing technologies so performance and comfort improve together.",
@@ -148,7 +142,6 @@ export const SERVICES = [
   {
     id: "interior-exterior-finishes",
     title: "Interior & Exterior Finishes",
-    eyebrow: "07",
     shortDesc: "Layered finishing—from plastering and tiling to exterior cladding.",
     approachParagraph:
       "We bring surfaces to life through layered finishes—plastering, painting, tiling, and stone/tile selection—paired with refined exterior cladding so the home looks elegant and performs well for years.",
@@ -171,8 +164,7 @@ export const SERVICES = [
   },
   {
     id: "amenities-landscaping",
-    title: "Amenities & Landscaping",
-    eyebrow: "08",
+    title: "Amenities, Landscaping & Handover",
     shortDesc: "Standard and upscale landscaping features for complete outdoor living.",
     approachParagraph:
       "We design outdoor living with discipline: standard landscaping for structure and usability, and upscale landscaping features like infinity pools, rooftop gardens, outdoor kitchens, and sculpted elements—tailored to your home’s architecture.",

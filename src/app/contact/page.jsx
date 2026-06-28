@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HERO_FOCUS, HERO_IMAGES } from "../../lib/enframeImages";
 
 function InfoItem({ label, children }) {
@@ -15,7 +15,48 @@ function InfoItem({ label, children }) {
 }
 
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = showSuccess ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showSuccess]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("submitting");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const payload = {
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        setStatus("idle");
+        return;
+      }
+
+      form.reset();
+      setStatus("idle");
+      setShowSuccess(true);
+    } catch {
+      setStatus("idle");
+    }
+  };
 
   return (
     <div className="bg-cream">
@@ -79,10 +120,10 @@ export default function ContactPage() {
               <div className="mt-6 space-y-3">
                 <InfoItem label="Email">
                   <a
-                    href="mailto:sales@enframeconstructions.com"
+                    href="mailto:info@enframeconstructions.com"
                     className="hover:text-ink transition-colors"
                   >
-                    sales@enframeconstructions.com
+                    info@enframeconstructions.com
                   </a>
                 </InfoItem>
 
@@ -119,10 +160,7 @@ export default function ContactPage() {
 
               <form
                 className="mt-7 grid md:grid-cols-2 gap-5"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
-                }}
+                onSubmit={handleSubmit}
               >
                 <label className="block">
                   <span className="font-sans text-[10px] tracking-[0.18em] uppercase text-inkMuted">
@@ -179,25 +217,67 @@ export default function ContactPage() {
                 <div className="md:col-span-2 flex flex-wrap items-center gap-3 pt-1">
                   <button
                     type="submit"
-                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-accent text-paper font-sans text-xs tracking-[0.18em] uppercase hover:bg-accentDark transition-colors rounded-2xl"
+                    disabled={status === "submitting"}
+                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-accent text-paper font-sans text-xs tracking-[0.18em] uppercase hover:bg-accentDark transition-colors rounded-2xl disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Send enquiry
+                    {status === "submitting" ? "Sending..." : "Send enquiry"}
                   </button>
                   <span className="font-serif text-sm text-black/60">
                     We typically respond within one business day.
                   </span>
                 </div>
               </form>
-
-              {submitted ? (
-                <p className="mt-5 rounded-2xl border border-accent/25 bg-accent/10 px-4 py-3 font-serif text-ink">
-                  Thank you. Your enquiry has been received and our team will contact you soon.
-                </p>
-              ) : null}
             </motion.div>
           </div>
         </div>
       </section>
+
+      <AnimatePresence>
+        {showSuccess ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/50 backdrop-blur-sm p-4"
+            onClick={() => setShowSuccess(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md rounded-3xl border border-ink/10 bg-paper p-8 text-center shadow-[0_24px_60px_-20px_rgba(34,25,19,0.25)]"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="contact-success-title"
+            >
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent/15">
+                <span className="font-sans text-2xl text-accent" aria-hidden="true">
+                  ✓
+                </span>
+              </div>
+              <h3
+                id="contact-success-title"
+                className="mt-5 font-display text-2xl text-ink"
+              >
+                Enquiry received
+              </h3>
+              <p className="mt-3 font-serif text-sm text-ink/75 leading-relaxed">
+                Thank you. Our team will contact you soon — we typically respond within one
+                business day.
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowSuccess(false)}
+                className="mt-7 inline-flex items-center justify-center px-8 py-3.5 bg-accent text-paper font-sans text-xs tracking-[0.18em] uppercase hover:bg-accentDark transition-colors rounded-2xl"
+              >
+                Close
+              </button>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <section className="pb-24 bg-paper">
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
