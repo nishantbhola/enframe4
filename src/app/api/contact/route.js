@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function getContactConfig() {
+  const scriptUrl = (process.env.GOOGLE_APPS_SCRIPT_URL ?? "").trim();
+  const secret = (process.env.CONTACT_FORM_SECRET ?? "").trim();
+
+  if (!scriptUrl || !secret) {
+    return null;
+  }
+
+  return { scriptUrl, secret };
+}
 
 function validateBody(body) {
   if (!body || typeof body !== "object") {
@@ -20,25 +33,14 @@ function validateBody(body) {
   return { name, phone, email, message };
 }
 
-async function submitViaAppsScript(validated) {
-  const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
-  const secret = (process.env.CONTACT_FORM_SECRET ?? "").trim();
-
-  if (!scriptUrl) {
-    throw new Error("Contact form is not configured yet.");
-  }
-
-  if (!secret) {
-    throw new Error("CONTACT_FORM_SECRET is not configured.");
-  }
-
+async function submitViaAppsScript(validated, config) {
   const payload = {
     ...validated,
-    secret,
+    secret: config.secret,
     submittedAt: new Date().toISOString(),
   };
 
-  const response = await fetch(scriptUrl, {
+  const response = await fetch(config.scriptUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -65,9 +67,11 @@ async function submitViaAppsScript(validated) {
 }
 
 export async function POST(request) {
-  if (!process.env.GOOGLE_APPS_SCRIPT_URL) {
+  const config = getContactConfig();
+
+  if (!config) {
     return NextResponse.json(
-      { error: "Contact form is not configured yet. Please try email or WhatsApp." },
+      { error: "Contact form is not configured on the server." },
       { status: 503 }
     );
   }
@@ -85,7 +89,7 @@ export async function POST(request) {
   }
 
   try {
-    await submitViaAppsScript(validated);
+    await submitViaAppsScript(validated, config);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Could not save your enquiry." }, { status: 502 });

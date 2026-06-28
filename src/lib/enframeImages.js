@@ -228,8 +228,9 @@ export const HOME_SERVICE_CARDS = [
     id: "ground-breaking-site-preparation",
     title: "Ground Breaking & Site Preparation",
     desc: "Clearing & Excavation; Utility Setup; Ground Breaking & Site Preparation.",
-    image:
-      "https://i.pinimg.com/736x/7b/19/e6/7b19e6c0b293a5e99d7d4f7bf7516250.jpg",
+    
+    image: "https://images.unsplash.com/photo-1599707254554-027aeb4deacd?w=1200&q=80",
+
     imagePosition: "50% 52%",
   },
   {
@@ -251,14 +252,15 @@ export const HOME_SERVICE_CARDS = [
     id: "wood-work",
     title: "Wood Work",
     desc: "Custom cabinetry and refined interior wood enhancements.",
-    image: "https://images.unsplash.com/photo-1599707254554-027aeb4deacd?w=1200&q=80",
+    image: cdnGallery("090a9427_a.jpg"),
     imagePosition: "50% 50%",
   },
   {
     id: "mechanical-electrical-plumbing",
     title: "Mechanical, Electrical & Plumbing (MEP)",
     desc: "Install MEP systems: wiring, plumbing, HVAC, and fire safety; soundproofing technologies.",
-    image: cdnGallery("090a9427_a.jpg"),
+    image:
+      "https://i.pinimg.com/736x/7b/19/e6/7b19e6c0b293a5e99d7d4f7bf7516250.jpg",
     imagePosition: "50% 50%",
   },
   {

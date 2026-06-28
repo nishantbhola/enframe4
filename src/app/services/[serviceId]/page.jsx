@@ -1,10 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { SERVICES, SERVICES_BY_ID } from "../servicesData";
-import { IMAGE_DIRECTION, SERVICE_CARD_MEDIA } from "../../../lib/enframeImages";
 
 function Bullet({ text }) {
   return (
@@ -57,8 +55,6 @@ export default function ServiceDetailPage({ params }) {
     );
   }
 
-  const media = SERVICE_CARD_MEDIA[service.id] ?? IMAGE_DIRECTION.overview.main;
-
   return (
     <div className="bg-cream min-h-screen">
       <header className="border-b border-ink/8 bg-paper pt-24 md:pt-28">
@@ -100,18 +96,6 @@ export default function ServiceDetailPage({ params }) {
             transition={{ duration: 0.5 }}
             className="overflow-hidden rounded-3xl border border-ink/8 bg-paper shadow-[0_12px_40px_-16px_rgba(34,25,19,0.1)]"
           >
-            <div className="relative aspect-video w-full h-[300px] md:h-[400px] lg:h-[500px]">
-              <Image
-                src={media.src}
-                alt={service.title}
-                fill
-                className="object-cover"
-                style={{ objectPosition: media.position }}
-                sizes="(max-width: 768px) 100vw, 768px"
-                priority
-              />
-            </div>
-
             <div className="p-6 md:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
                 <div>

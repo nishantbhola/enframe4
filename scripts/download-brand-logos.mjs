@@ -11,13 +11,13 @@ const BRANDS = [
   { name: "JK Cement", domain: "jkcement.com" },
   { name: "Supreme", domain: "supreme.co.in" },
   { name: "Astral Pipes", domain: "astralpipes.com" },
-  { name: "Polycab", domain: "polycab.com" },
+  { name: "Polycab", domain: "polycab.com", logo: "https://polycab.com/apple-touch-icon.png" },
   { name: "KEI", domain: "kei-ind.com" },
   { name: "Legrand", domain: "legrand.com" },
   { name: "TOTO", domain: "totousa.com" },
   { name: "Kohler", domain: "kohler.com" },
   { name: "Grohe", domain: "grohe.com" },
-  { name: "Jaquar", domain: "jaquar.com" },
+  { name: "Jaquar", domain: "jaquar.com", logo: "https://www.jaquar.com/Themes/Jaquar2025_V1/Content/images/logo.svg" },
   { name: "Schuco", domain: "schuco.com" },
   { name: "Fenesta", domain: "fenesta.com" },
   { name: "Hettich", domain: "hettich.com" },
@@ -50,23 +50,34 @@ async function main() {
 
   for (const brand of BRANDS) {
     const file = path.join(outDir, `${slug(brand.domain)}.png`);
-    const primary = `https://logo.clearbit.com/${brand.domain}?size=256`;
-    const secondary = `https://www.google.com/s2/favicons?sz=256&domain=${brand.domain}`;
+    const sources = brand.logo
+      ? [brand.logo]
+      : [
+          `https://logo.clearbit.com/${brand.domain}?size=256`,
+          `https://www.google.com/s2/favicons?sz=256&domain=${brand.domain}`,
+        ];
 
-    try {
-      const data = await download(primary);
-      await writeFile(file, data);
-      ok += 1;
-      console.log(`OK       ${brand.name}`);
-      continue;
-    } catch {}
+    let saved = false;
+    for (const url of sources) {
+      try {
+        const data = await download(url, { allowImageOnErrorStatus: url.includes("favicons") });
+        await writeFile(file, data);
+        if (brand.logo) {
+          ok += 1;
+          console.log(`CUSTOM   ${brand.name}`);
+        } else if (url.includes("clearbit")) {
+          ok += 1;
+          console.log(`OK       ${brand.name}`);
+        } else {
+          fallback += 1;
+          console.log(`FALLBACK ${brand.name}`);
+        }
+        saved = true;
+        break;
+      } catch {}
+    }
 
-    try {
-      const data = await download(secondary, { allowImageOnErrorStatus: true });
-      await writeFile(file, data);
-      fallback += 1;
-      console.log(`FALLBACK ${brand.name}`);
-    } catch {
+    if (!saved) {
       failed += 1;
       console.log(`FAILED   ${brand.name}`);
     }

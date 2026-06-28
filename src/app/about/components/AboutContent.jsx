@@ -58,43 +58,43 @@ export default function AboutContent() {
     {
       title: "Opulent Residences",
       desc: "Signature homes with refined detailing and private client delivery.",
-      image: categoryImages[0].src,
+      image: "https://i.pinimg.com/1200x/d4/dd/42/d4dd42b222daf49c9af3562c41cde217.jpg",
       imagePosition: categoryImages[0].position,
     },
     {
       title: "Villas & Farm Estates",
       desc: "Large-format lifestyle builds with curated architecture and landscape.",
-      image: categoryImages[1].src,
+      image: "https://i.pinimg.com/1200x/77/52/b1/7752b105bd2cdb6a6587c82afb44ffe6.jpg",
       imagePosition: categoryImages[1].position,
     },
     {
       title: "Independent Floors",
       desc: "Premium floor-wise residences executed with consistent quality control.",
-      image: categoryImages[2].src,
+      image: "https://i.pinimg.com/736x/6c/21/d1/6c21d1c2d1a599fec658dac6775ce47d.jpg",
       imagePosition: categoryImages[2].position,
     },
     {
       title: "Simplex & Duplex Homes",
       desc: "Multi-level residences with polished planning and finish harmony.",
-      image: categoryImages[3].src,
+      image: "https://i.pinimg.com/1200x/0d/19/7d/0d197d2f62376e35e7c61e45c5e7052a.jpg",
       imagePosition: categoryImages[3].position,
     },
     {
       title: "Commercial Spaces",
       desc: "High-performance commercial execution with elevated design language.",
-      image: categoryImages[4].src,
+      image: "https://i.pinimg.com/736x/a6/2e/36/a62e36f2a5c499acef130d6db5b1ab5e.jpg",
       imagePosition: categoryImages[4].position,
     },
     {
       title: "Factories & Industrial Units",
       desc: "Robust industrial development with safety-first and process-led execution.",
-      image: categoryImages[5].src,
+      image: "https://i.pinimg.com/1200x/41/6b/c9/416bc98f1733ca6a050185c616109e79.jpg",
       imagePosition: categoryImages[5].position,
     },
     {
       title: "PEB (Pre Engineered Building)",
       desc: "Fast-track steel structures for factories, warehouses, and commercial builds with engineered design and on-site erection.",
-      image: categoryImages[5].src,
+      image: "https://i.pinimg.com/1200x/6b/53/37/6b533731de900740e3970eab713a87d6.jpg",
       imagePosition: categoryImages[5].position,
     },
   ];
@@ -110,13 +110,13 @@ export default function AboutContent() {
     { name: "JK Cement", domain: "jkcement.com" },
     { name: "Supreme", domain: "supreme.co.in" },
     { name: "Astral Pipes", domain: "astralpipes.com" },
-    { name: "Polycab", domain: "polycab.com" },
+    { name: "Polycab", domain: "polycab.com", logo: "https://polycab.com/apple-touch-icon.png" },
     { name: "KEI", domain: "kei-ind.com" },
     { name: "Legrand", domain: "legrand.com" },
     { name: "TOTO", domain: "totousa.com" },
     { name: "Kohler", domain: "kohler.com" },
     { name: "Grohe", domain: "grohe.com" },
-    { name: "Jaquar", domain: "jaquar.com" },
+    { name: "Jaquar", domain: "jaquar.com", logo: "https://www.jaquar.com/Themes/Jaquar2025_V1/Content/images/logo.svg" },
     { name: "Schuco", domain: "schuco.com" },
     { name: "Fenesta", domain: "fenesta.com" },
     { name: "Hettich", domain: "hettich.com" },
@@ -377,7 +377,7 @@ export default function AboutContent() {
                   className="inline-flex items-center gap-4 rounded-2xl border border-ink/10 bg-paper/80 px-6 py-4 min-w-[240px] mr-5"
                 >
                   <img
-                    src={logoFilenameFromDomain(brand.domain)}
+                    src={brand.logo ?? logoFilenameFromDomain(brand.domain)}
                     alt={brand.name}
                     className="w-12 h-12 rounded-lg object-contain bg-white p-1.5"
                     loading="lazy"
