@@ -17,6 +17,7 @@ function InfoItem({ label, children }) {
 export default function ContactPage() {
   const [status, setStatus] = useState("idle");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = showSuccess ? "hidden" : "";
@@ -28,6 +29,7 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("submitting");
+    setSubmitError("");
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -47,6 +49,9 @@ export default function ContactPage() {
 
       if (!response.ok) {
         setStatus("idle");
+        setSubmitError(
+          "We could not send your enquiry right now. Please email info@enframeconstructions.com or WhatsApp us."
+        );
         return;
       }
 
@@ -55,6 +60,9 @@ export default function ContactPage() {
       setShowSuccess(true);
     } catch {
       setStatus("idle");
+      setSubmitError(
+        "We could not send your enquiry right now. Please email info@enframeconstructions.com or WhatsApp us."
+      );
     }
   };
 
@@ -226,6 +234,11 @@ export default function ContactPage() {
                     We typically respond within one business day.
                   </span>
                 </div>
+                {submitError ? (
+                  <p className="md:col-span-2 font-sans text-sm text-red-700/90 leading-relaxed">
+                    {submitError}
+                  </p>
+                ) : null}
               </form>
             </motion.div>
           </div>

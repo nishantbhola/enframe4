@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -33,6 +34,35 @@ function validateBody(body) {
   return { name, phone, email, message };
 }
 
+/**
+ * Google Apps Script web apps: POST runs doPost, then 302 to googleusercontent.
+ * Follow that URL with GET (not another POST) to read the JSON result.
+ */
+async function postToAppsScript(url, payload) {
+  const postResponse = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    redirect: "manual",
+    cache: "no-store",
+  });
+
+  if (postResponse.status >= 300 && postResponse.status < 400) {
+    const location = postResponse.headers.get("location");
+    if (!location) {
+      throw new Error("Apps Script redirect missing location header.");
+    }
+
+    return fetch(location, {
+      method: "GET",
+      redirect: "follow",
+      cache: "no-store",
+    });
+  }
+
+  return postResponse;
+}
+
 async function submitViaAppsScript(validated, config) {
   const payload = {
     ...validated,
@@ -40,27 +70,26 @@ async function submitViaAppsScript(validated, config) {
     submittedAt: new Date().toISOString(),
   };
 
-  const response = await fetch(config.scriptUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    redirect: "follow",
-    cache: "no-store",
-  });
-
+  const response = await postToAppsScript(config.scriptUrl, payload);
   const text = await response.text();
-  let result = { success: response.ok };
 
+  let result;
   try {
     result = JSON.parse(text);
   } catch {
-    if (!response.ok) {
-      throw new Error("Could not save your enquiry.");
-    }
+    console.error("[contact] Non-JSON Apps Script response:", text.slice(0, 300));
+    throw new Error("Invalid response from contact service.");
   }
 
   if (!response.ok || result.success === false) {
+    console.error("[contact] Apps Script error:", result.error ?? response.status);
     throw new Error(result.error ?? "Could not save your enquiry.");
+  }
+
+  // doPost returns { sheet }; doGet (wrong redirect) only returns { todaySheet }.
+  if (!result.sheet) {
+    console.error("[contact] Apps Script did not confirm sheet write:", result);
+    throw new Error("Submission was not saved to the sheet.");
   }
 
   return result;
@@ -91,7 +120,8 @@ export async function POST(request) {
   try {
     await submitViaAppsScript(validated, config);
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    console.error("[contact] Submit failed:", error.message);
     return NextResponse.json({ error: "Could not save your enquiry." }, { status: 502 });
   }
 }
