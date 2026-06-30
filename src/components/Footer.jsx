@@ -12,7 +12,7 @@ const navLinks = [
 const socials = [
   { label: "Facebook", href: "#" },
   { label: "Instagram", href: "#" },
-  { label: "LinkedIn", href: "#" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/jaspinder-kochhar-b2277728" },
 ];
 
 function SocialIcon({ label }) {
