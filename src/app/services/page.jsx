@@ -144,7 +144,7 @@ export default function ServicesPage() {
             <div className="grid lg:grid-cols-2 gap-5 p-4 md:p-5 lg:gap-6 lg:p-6">
               <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[280px] overflow-hidden rounded-2xl">
                 <Image
-                  src="https://i.pinimg.com/1200x/3f/bb/91/3fbb9131d15593e6c0a0c7bb26b43f57.jpg"
+                  src="https://i.pinimg.com/1200x/1b/f6/65/1bf665e559e7c70de922e971d869b667.jpg"
                   alt=""
                   fill
                   className="object-cover"

@@ -183,9 +183,7 @@ export const ADDITIONAL = [
   cdnGallery("090a9338.jpg"),
   cdnGallery("090a9340.jpg"),
   cdnGallery("090a9378.jpg"),
-  cdnGallery("090a9448.jpg"),
   cdnGallery("090a9449.jpg"),
-  cdnGallery("090a9451a.jpg"),
   cdnGallery("090a9477.jpg"),
   cdnGallery("090a9495_a.jpg"),
   cdnGallery("090a9502.jpg"),
@@ -248,7 +246,7 @@ export const HOME_SERVICE_CARDS = [
     id: "wood-work",
     title: "Wood Work",
     desc: "Custom cabinetry and refined interior wood enhancements.",
-    image: "https://i.pinimg.com/736x/f8/3d/66/f83d66c825f9f66a8f77a92161913fd5.jpg",
+    image: "https://i.pinimg.com/1200x/3f/bb/91/3fbb9131d15593e6c0a0c7bb26b43f57.jpg",
     imagePosition: "50% 50%",
   },
   {
