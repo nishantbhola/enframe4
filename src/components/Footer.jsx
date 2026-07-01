@@ -10,8 +10,8 @@ const navLinks = [
 ];
 
 const socials = [
-  { label: "Facebook", href: "#" },
-  { label: "Instagram", href: "#" },
+  { label: "Facebook", href: "https://www.linkedin.com/in/jaspinder-kochhar-b2277728" },
+  { label: "Instagram", href: "https://www.linkedin.com/in/jaspinder-kochhar-b2277728" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jaspinder-kochhar-b2277728" },
 ];
 
@@ -61,7 +61,7 @@ export default function Footer() {
               <EnframeLogo className="h-[4.25rem] sm:h-16 md:h-[4.5rem] w-auto" />
             </Link>
             <p className="mt-4 font-sans text-base sm:text-base font-medium tracking-[0.06em] text-paper/85">
-              Enframe Constructions
+              Enframe Constructions LLP
             </p>
             <p className="mt-2 font-serif text-sm text-paper/50 leading-relaxed max-w-xs hidden sm:block">
               Ultra-opulent residences, pan India.
@@ -71,6 +71,8 @@ export default function Footer() {
                 <a
                   key={s.label}
                   href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
                   aria-label={s.label}
                   className="inline-flex h-10 w-10 md:h-8 md:w-8 items-center justify-center rounded-full border border-paper/15 text-paper/55 hover:text-paper hover:border-paper/30 transition-colors"
                 >
@@ -97,9 +99,11 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-4 flex flex-col items-center md:items-start">
-            <FooterLabel>Studio</FooterLabel>
+            <FooterLabel>Office</FooterLabel>
             <address className="not-italic space-y-2 text-[15px] md:text-[13px] text-paper/70 leading-relaxed">
-              <p>B-103 South City 1, Gurugram</p>
+              <a href="https://maps.app.goo.gl/tbGcUzqpzP3xKieq9" target="_blank" rel="noreferrer" className="block hover:text-accent transition-colors">
+                B-103 South City 1, Gurugram, Haryana - 122001
+              </a>
               <a href="https://wa.me/919800000448" target="_blank" rel="noreferrer" className="block hover:text-accent transition-colors">
                 +91 9800000448
               </a>
@@ -111,7 +115,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 md:mt-8 pt-6 md:pt-5 border-t border-paper/10 flex flex-col items-center sm:flex-row gap-2 sm:items-center sm:justify-between text-xs md:text-[10px] tracking-[0.14em] uppercase text-paper/35 text-center sm:text-left">
-          <p>&copy; {new Date().getFullYear()} Enframe Constructions</p>
+          <p>&copy; {new Date().getFullYear()} Enframe Constructions LLP</p>
           <p className="hidden sm:block">Opulent homes, quietly perfected.</p>
         </div>
       </div>

@@ -150,7 +150,7 @@ export default function AboutContent() {
               About us
             </p>
             <h1 className="mt-4 font-display text-3xl md:text-4xl lg:text-5xl text-paper tracking-[0.04em] leading-tight max-w-3xl">
-              Enframe Constructions LLP
+              Enframe Constructions
             </h1>
             <p className="mt-4 font-sans font-semibold text-base md:text-lg text-paper/90 max-w-xl leading-relaxed">
               We build with trust.
@@ -272,9 +272,6 @@ export default function AboutContent() {
                     sizes="(max-width: 1024px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent" />
-                  <span className="absolute top-3 left-3 w-8 h-8 rounded-full bg-accent/90 text-paper text-xs font-semibold flex items-center justify-center">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
                 </div>
                 <h3 className="font-display text-lg text-ink mt-4">{c.title}</h3>
                 <p className="font-serif text-black/80 text-sm mt-2 leading-relaxed">{c.desc}</p>

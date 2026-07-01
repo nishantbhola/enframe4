@@ -67,7 +67,7 @@ function Header() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="mt-5 font-display text-4xl md:text-5xl lg:text-[4.25rem] leading-[0.95] tracking-[0.04em] text-paper max-w-3xl"
           >
-            Enframe Constructions LLP
+            Enframe Constructions
           </motion.h1>
 
           <motion.div

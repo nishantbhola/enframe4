@@ -59,7 +59,7 @@ export default function ProjectsPage() {
             {PROJECTS.map((project, idx) => (
               <ProjectCard
                 key={project.id}
-                title={project.location}
+                title="View project"
                 image={project.image}
                 imagePosition={project.imagePosition}
                 href={`/projects/${project.id}`}

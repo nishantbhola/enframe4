@@ -153,23 +153,9 @@ export default function ProjectDetailPage({ params }) {
               All projects
             </Link>
             <span className="font-sans text-[10px] uppercase tracking-[0.28em] text-accent">
-              {project.tag}
+              Projects
             </span>
           </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className="mt-4 md:mt-5"
-          >
-            <h1 className="font-sans text-xl md:text-2xl font-semibold text-ink tracking-tight leading-snug">
-              {project.location}
-            </h1>
-            <p className="mt-2 font-sans text-sm text-inkMuted leading-relaxed">
-              {project.tag}
-            </p>
-          </motion.div>
         </div>
       </header>
 
@@ -197,7 +183,7 @@ export default function ProjectDetailPage({ params }) {
               >
                 <Image
                   src={gallery[0]}
-                  alt={project.location}
+                  alt="Project photo"
                   fill
                   unoptimized
                   className="object-cover"
@@ -218,7 +204,7 @@ export default function ProjectDetailPage({ params }) {
                   <ProjectGalleryThumb
                     key={src + i}
                     src={src}
-                    alt={`${project.location} ${i + 1}`}
+                    alt={`Project photo ${i + 1}`}
                     idx={i}
                     onClick={() => openLightbox(i)}
                     isActive={activeIndex === i && lightboxOpen}
@@ -264,25 +250,6 @@ export default function ProjectDetailPage({ params }) {
                   <div className="rounded-2xl border border-ink/8 bg-cream px-5 py-5">
                     <CheckList title="Quality checks" items={project.qualityChecks} />
                   </div>
-                  <div className="rounded-2xl border border-ink/8 bg-cream px-5 py-5 sm:col-span-2 lg:col-span-1">
-                    <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
-                      Project details
-                    </p>
-                    <dl className="mt-3 space-y-3">
-                      <div>
-                        <dt className="font-sans text-xs text-inkMuted">Location</dt>
-                        <dd className="mt-0.5 font-sans text-sm font-semibold text-ink">
-                          {project.location}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="font-sans text-xs text-inkMuted">Category</dt>
-                        <dd className="mt-0.5 font-sans text-sm font-semibold text-ink">
-                          {project.tag}
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
                 </div>
               </div>
             </motion.div>
@@ -295,10 +262,7 @@ export default function ProjectDetailPage({ params }) {
                     className="group border-b border-ink/8 px-5 py-4 transition-colors hover:bg-cream/80 sm:border-b-0 sm:border-r"
                   >
                     <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
-                      ← Previous
-                    </p>
-                    <p className="mt-1 font-sans text-sm font-semibold text-ink group-hover:text-accent transition-colors">
-                      {prevProject.location}
+                      ← Previous project
                     </p>
                   </Link>
                 ) : (
@@ -310,10 +274,7 @@ export default function ProjectDetailPage({ params }) {
                     className="group px-5 py-4 text-left transition-colors hover:bg-cream/80 sm:text-right"
                   >
                     <p className="font-sans text-[10px] uppercase tracking-[0.16em] text-inkMuted">
-                      Next →
-                    </p>
-                    <p className="mt-1 font-sans text-sm font-semibold text-ink group-hover:text-accent transition-colors">
-                      {nextProject.location}
+                      Next project →
                     </p>
                   </Link>
                 ) : null}
@@ -381,7 +342,7 @@ export default function ProjectDetailPage({ params }) {
               <img
                 key={src}
                 src={src}
-                alt={`${project.location} ${i + 1}`}
+                alt={`Project photo ${i + 1}`}
                 decoding="async"
                 className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-150 ${
                   lightboxOpen && i === activeIndex
@@ -418,10 +379,7 @@ export default function ProjectDetailPage({ params }) {
               →
             </button>
 
-            <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between gap-3">
-              <p className="font-sans text-sm font-semibold text-paper truncate">
-                {project.location}
-              </p>
+            <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-end gap-3">
               <p className="shrink-0 font-sans text-[10px] uppercase tracking-[0.14em] text-paper/80">
                 {activeIndex + 1} / {gallery.length}
               </p>

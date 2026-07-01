@@ -105,7 +105,7 @@ export const HERO_IMAGES = {
   services: cdnHero("services-hero.jpg"),
   projects: cdnHero("projects-hero.jpg"),
   gallery: cdnHero("gallery-hero.jpg"),
-  contact: cdnGallery("090a9517.jpg"),
+  contact: cdnGallery("090a9625.jpg"),
 };
 
 export const HERO_FOCUS = {
@@ -125,7 +125,6 @@ export const EXTERIORS = [
   cdnGallery("e0902465.jpg"),
   cdnGallery("090a9569.jpg"),
   cdnGallery("090a9628.jpg"),
-  cdnGallery("090a9634.jpg"),
   cdnGallery("99ef07fa.jpg"),
   cdnGallery("090a9344.jpg"),
 ];
@@ -161,7 +160,6 @@ export const BATHROOMS = [
   cdnGallery("090a9500.jpg"),
   cdnGallery("090a9476.jpg"),
   cdnGallery("090a9431.jpg"),
-  cdnGallery("dd85e4f4.jpg"),
 ];
 
 export const DOORS_WOODWORK = [
@@ -173,9 +171,7 @@ export const DOORS_WOODWORK = [
 export const ARCHITECTURAL_DETAILS = [
   cdnGallery("090a9392.jpg"),
   cdnGallery("090a9395aa_vv.jpg"),
-  cdnGallery("090a9427_a.jpg"),
   cdnGallery("090a9512.jpg"),
-  cdnGallery("74ef58a6.jpg"),
 ];
 
 export const COMMERCIAL = [cdnGallery("090a9650.jpg")];
@@ -238,7 +234,7 @@ export const HOME_SERVICE_CARDS = [
     title: "Foundation & Structural Work",
     desc: "Foundation Laying; Structural Framing; Rainwater Harvesting.",
     image:
-      "https://i.pinimg.com/736x/a7/dc/e7/a7dce7f8af9240b8fc9c3e1ea661bd22.jpg",
+      "https://i.pinimg.com/1200x/5e/33/d7/5e33d752950ace4fc9ec838926abd480.jpg",
     imagePosition: "50% 48%",
   },
   {
@@ -252,7 +248,7 @@ export const HOME_SERVICE_CARDS = [
     id: "wood-work",
     title: "Wood Work",
     desc: "Custom cabinetry and refined interior wood enhancements.",
-    image: cdnGallery("090a9427_a.jpg"),
+    image: "https://i.pinimg.com/736x/f8/3d/66/f83d66c825f9f66a8f77a92161913fd5.jpg",
     imagePosition: "50% 50%",
   },
   {

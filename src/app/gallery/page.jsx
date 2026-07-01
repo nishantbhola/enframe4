@@ -8,6 +8,30 @@ import { ALL_PHOTOS, HERO_FOCUS, HERO_IMAGES } from "../../lib/enframeImages";
 
 const EXTRA_GALLERY_IMAGES = ALL_PHOTOS;
 
+const GALLERY_EXCLUDED = new Set([
+  "090a9634",
+  "090a9427-a",
+  "74ef58a6",
+  "74ef58a6-f520-420b-bc94-53073ae2b7ee_4_5005_c",
+  "dd85e4f4-2894-4c25-896b-03b51c19a5c0_1_105_c",
+]);
+
+function galleryImageKey(src) {
+  const file = (src.split("/").pop() ?? "").toLowerCase();
+  return file.replace(/\.(webp|jpe?g|png)$/i, "");
+}
+
+function dedupeGalleryItems(items) {
+  const seen = new Set();
+
+  return items.filter((item) => {
+    const key = galleryImageKey(item.src);
+    if (!item.src || !key || seen.has(key) || GALLERY_EXCLUDED.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function GalleryCard({ item, idx, onOpen }) {
   return (
     <motion.button
@@ -78,7 +102,7 @@ export default function GalleryPage() {
         : project.gallery?.length
           ? project.gallery
           : [project.image];
-      return images.map((src) => ({ src, label: project.title }));
+      return images.map((src) => ({ src, label: "Project" }));
     });
 
     const extraItems = EXTRA_GALLERY_IMAGES.map((src) => ({
@@ -86,12 +110,8 @@ export default function GalleryPage() {
       label: "Gallery image",
     }));
 
-    const seen = new Set();
-    return [...extraItems, ...listedProjectItems].filter((item) => {
-      if (!item.src || seen.has(item.src)) return false;
-      seen.add(item.src);
-      return true;
-    });
+    // Project images first so labels are kept when the same file also appears in ALL_PHOTOS.
+    return dedupeGalleryItems([...listedProjectItems, ...extraItems]);
   }, []);
 
   const lightboxItems = useMemo(
@@ -191,7 +211,7 @@ export default function GalleryPage() {
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-6">
             {galleryItems.map((item, idx) => (
-              <GalleryCard key={`${item.src}-${idx}`} item={item} idx={idx} onOpen={openLightbox} />
+              <GalleryCard key={galleryImageKey(item.src)} item={item} idx={idx} onOpen={openLightbox} />
             ))}
           </div>
         </div>
@@ -258,9 +278,6 @@ export default function GalleryPage() {
                       Image {current.index} / {current.total}
                     </span>
                   </div>
-                  <p className="mt-4 font-display text-2xl text-paper leading-tight">
-                    {current.label}
-                  </p>
                 </div>
               </div>
             </motion.div>

@@ -3,10 +3,10 @@
 import { motion } from "framer-motion";
 
 const STEPS = [
-  { num: "01", label: "Plan", desc: "Site, design & approvals" },
-  { num: "02", label: "Structure", desc: "Foundation to envelope" },
-  { num: "03", label: "Systems", desc: "MEP & finishes" },
-  { num: "04", label: "Handover", desc: "Quality & keys" },
+  { label: "Plan", desc: "Site, design & approvals" },
+  { label: "Structure", desc: "Foundation to envelope" },
+  { label: "Systems", desc: "MEP & finishes" },
+  { label: "Handover", desc: "Quality & keys" },
 ];
 
 export default function SectionBridge() {
@@ -32,17 +32,14 @@ export default function SectionBridge() {
         <div className="mt-10 md:mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
           {STEPS.map((step, i) => (
             <motion.div
-              key={step.num}
+              key={step.label}
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.06 }}
               className="text-center md:text-left md:px-4 md:border-l md:border-paper/10 first:md:border-l-0"
             >
-              <span className="font-sans text-xs font-semibold text-accent tracking-widest">
-                {step.num}
-              </span>
-              <p className="mt-2 font-sans font-semibold text-sm text-paper">{step.label}</p>
+              <p className="font-sans font-semibold text-sm text-paper">{step.label}</p>
               <p className="mt-1 font-sans text-xs text-paper/50">{step.desc}</p>
             </motion.div>
           ))}

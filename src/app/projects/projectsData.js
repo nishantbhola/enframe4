@@ -1,9 +1,15 @@
 const CDN = "https://d1ui1jxb5e6bds.cloudfront.net/enframev4/projects";
 
+const PROJECT_LOCATIONS = {
+  "south-city-103": "South City 103, Gurugram",
+  "south-city-117": "South City 117, Gurugram",
+  "dlf-1": "DLF 1, Gurugram",
+  "dlf-3": "DLF 3, Gurugram",
+  "south-ex-1-delhi": "South Ex 1, Delhi",
+};
+
 export const projectsData = {
   "south-city-103": {
-    title: "02",
-    location: "02",
     tag: "Opulent homes",
     imagePosition: "50% 52%",
     overview:
@@ -38,8 +44,6 @@ export const projectsData = {
     ],
   },
   "south-city-117": {
-    title: "03",
-    location: "03",
     tag: "Premium finishing",
     imagePosition: "50% 48%",
     overview:
@@ -73,8 +77,6 @@ export const projectsData = {
     ],
   },
   "dlf-1": {
-    title: "04",
-    location: "04",
     tag: "Opulent homes",
     imagePosition: "50% 52%",
     overview:
@@ -127,8 +129,6 @@ export const projectsData = {
     ],
   },
   "dlf-3": {
-    title: "05",
-    location: "05",
     tag: "Ultra-opulent delivery",
     imagePosition: "50% 50%",
     overview:
@@ -168,8 +168,6 @@ export const projectsData = {
     ],
   },
   "south-ex-1-delhi": {
-    title: "01",
-    location: "01",
     tag: "Ultra-opulent villa build",
     imagePosition: "50% 54%",
     overview:
@@ -212,6 +210,8 @@ export const PROJECTS = PROJECT_ORDER.map((id) => {
   return {
     id,
     ...project,
+    title: project.tag,
+    location: PROJECT_LOCATIONS[id],
     image: project.images[0],
     gallery: project.images,
   };
